@@ -17,4 +17,20 @@ namespace RecipeCli
             Description = description;
         }
     }
+
+    internal class RecipeState
+    {
+        private List<Recipe> recipes = new();
+
+        public List<Recipe> List()
+        {
+            return recipes;
+        }
+
+        public List<Recipe> Add(string name, string description)
+        {
+            recipes.Add(new Recipe(name, description));
+            return recipes;
+        }
+    }
 }
