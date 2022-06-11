@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RecipeCli
@@ -24,12 +23,29 @@ namespace RecipeCli
 
         public List<Recipe> List()
         {
+            try {
+                string jsonBody = Storage.Load("recipes").ToString();
+                recipes = System.Text.Json.JsonSerializer.Deserialize<List<Recipe>>(jsonBody);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             return recipes;
         }
 
         public List<Recipe> Add(string name, string description)
         {
-            recipes.Add(new Recipe(name, description));
+            try
+            {
+                recipes.Add(new Recipe(name, description));
+                string jsonBody = System.Text.Json.JsonSerializer.Serialize<List<Recipe>>(recipes);
+                Storage.Save("recipes", System.Text.Encoding.ASCII.GetBytes(jsonBody));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
             return recipes;
         }
     }
