@@ -14,7 +14,6 @@ namespace RecipeCli
         {
             string filePath = Path.Combine(appDir, $"{path}.json");
             byte[] result = Array.Empty<byte>();
-            Console.WriteLine($"path: {filePath}, {appDir}");
             try
             {
                 result = File.ReadAllBytes(filePath);

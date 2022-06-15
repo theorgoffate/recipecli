@@ -22,24 +22,60 @@
             string cmd = args[0];
             switch (cmd) {
                 case "list":
-                    foreach (Recipe recipe in state.List())
-                    {
-                        Console.WriteLine($"name: {recipe.Name}");
-                    }
+                    DisplayRecipes(state.List());
                     break;
                 case "add":
                     try {
                         ArgErrors(args, 3);
                         state.Add(args[1], args[2]);
+                        DisplayRecipes(state.List());
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+                    break;
+                case "getByName":
+                    try
+                    {
+                        ArgErrors(args, 2);
                         foreach (Recipe recipe in state.List())
                         {
-                            Console.WriteLine($"name: {recipe.Name}");
+                            if (recipe.Name == args[1])
+                            {
+                                Console.WriteLine($"name: {recipe.Name}, description: {recipe.Description}");
+                                return;
+                            }
                         }
                     }
                     catch (Exception)
                     {
                         return;
                     }
+                    Console.WriteLine("no result found");
+                    break;
+                case "delByName":
+                    try
+                    {
+                        ArgErrors(args, 2);
+                        try
+                        {
+                            state.DeleteByName(args[1]);
+                            DisplayRecipes(state.List());
+                            return;
+                        }
+                        catch (ExceptionRecipeNotFound ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            return;
+                        }
+                        
+                    }
+                    catch (Exception)
+                    {
+                        return;
+                    }
+                    Console.WriteLine("no result found");
                     break;
                 default:
                     Console.WriteLine("No command sent");
@@ -55,6 +91,13 @@
                 throw new Exception("MissingArguments");
             }
             return;
+        }
+        static void DisplayRecipes(List<Recipe> recipes)
+        {
+            foreach (Recipe recipe in recipes)
+            {
+                Console.WriteLine($"name: {recipe.Name}, description: {recipe.Description}");
+            }
         }
     }
 }
