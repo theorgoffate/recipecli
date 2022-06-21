@@ -49,6 +49,18 @@ namespace RecipeCli
             }
             return recipes;
         }
+
+        public Recipe GetByName(string name) {
+            recipes = List();
+            foreach (Recipe recipe in recipes) 
+            {
+                if (recipe.Name == name)
+                {
+                    return recipe;
+                }
+            }
+            throw new ExceptionRecipeNotFound($"recipe not found by name {name}");
+        }
         public List<Recipe> DeleteByName(string name)
         {
             recipes = List();
