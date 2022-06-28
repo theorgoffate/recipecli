@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace RecipeCli
 {
@@ -25,7 +22,8 @@ namespace RecipeCli
         {
             try {
                 string jsonBody = System.Text.Encoding.UTF8.GetString(Storage.Load("recipes"));
-                recipes = System.Text.Json.JsonSerializer.Deserialize<List<Recipe>>(jsonBody);
+                var data = System.Text.Json.JsonSerializer.Deserialize<List<Recipe>>(jsonBody);
+                if (data != null) recipes = data.ToList();
             }
             catch (Exception ex)
             {

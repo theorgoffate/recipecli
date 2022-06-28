@@ -6,7 +6,8 @@
          * Usage syntax:
          *  recipecli add <name> <description>
          *  recipecli list
-         *  recipecli show <name>
+         *  recipecli getByName <name>
+         *  recipecli delByName <name>
          */
         static void Main(string[] args)
         {
@@ -15,8 +16,9 @@
             {
                 ArgErrors(args, 1);
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
+                Console.WriteLine(ex.Message);
                 return;
             }
             string cmd = args[0];
@@ -27,11 +29,15 @@
                 case "add":
                     try {
                         ArgErrors(args, 3);
-                        state.Add(args[1], args[2]);
+                        state.Add(
+                            args[1],
+                            description: String.Join("; ", args[2..args.Length])
+                            );
                         DisplayRecipes(state.List());
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return;
                     }
                     break;
@@ -39,21 +45,23 @@
                     try
                     {
                         ArgErrors(args, 2);
-                        foreach (Recipe recipe in state.List())
+                        try
                         {
-                            if (recipe.Name == args[1])
-                            {
-                                Console.WriteLine($"name: {recipe.Name}, description: {recipe.Description}");
-                                return;
-                            }
+                            Recipe recipe = state.GetByName(args[1]);
+                            Console.WriteLine($"name: {recipe.Name}, description: {recipe.Description}");
+                            return;
+                        }
+                        catch (ExceptionRecipeNotFound ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            return;
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return;
                     }
-                    Console.WriteLine("no result found");
-                    break;
                 case "delByName":
                     try
                     {
@@ -71,12 +79,11 @@
                         }
                         
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        Console.WriteLine(ex.Message);
                         return;
                     }
-                    Console.WriteLine("no result found");
-                    break;
                 default:
                     Console.WriteLine("No command sent");
                     break;
