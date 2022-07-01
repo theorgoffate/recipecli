@@ -31,7 +31,7 @@
                         ArgErrors(args, 3);
                         state.Add(
                             args[1],
-                            description: String.Join("; ", args[2..args.Length])
+                            description: String.Join(" ", args[2..args.Length])
                             );
                         DisplayRecipes(state.List());
                     }
